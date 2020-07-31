@@ -1,6 +1,6 @@
 # Optimizers 👀
 
-Optimizers is a header-only library for C++ to optimize low-dimensional functions.
+Optimizers is a simple, C++ header-only library for optimization algorithms.
 
 The following optimization algorithms are included/will be included:
 
