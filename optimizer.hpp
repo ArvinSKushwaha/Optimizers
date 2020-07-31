@@ -2,7 +2,7 @@
 #include <functional>
 #include <float.h>
 
-class SwarmOptimizer
+class PVSO
 {
 public:
     std::function<double(Eigen::ArrayXd)> f;
@@ -19,7 +19,7 @@ public:
     double l_constraint = -1;
     double u_constraint = 1;
 
-    SwarmOptimizer(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_)
+    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_)
     {
         f = x_;
         particle_count = n;
@@ -34,7 +34,7 @@ public:
         y_best = (double *)malloc(particle_count * sizeof(double));
     }
 
-    SwarmOptimizer(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg)
+    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg)
     {
         f = x_;
         particle_count = n;
@@ -53,7 +53,7 @@ public:
         phi_p = pp;
     }
 
-    SwarmOptimizer(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double lc, double uc)
+    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double lc, double uc)
     {
         f = x_;
         particle_count = n;
@@ -71,7 +71,7 @@ public:
         u_constraint = uc;
     }
 
-    SwarmOptimizer(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg, double lc, double uc)
+    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg, double lc, double uc)
     {
         f = x_;
         particle_count = n;
