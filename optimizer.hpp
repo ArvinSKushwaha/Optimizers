@@ -2,13 +2,17 @@
 #include <functional>
 #include <float.h>
 
-class PVSO
+
+// Vanilla Particle Swarm Optimization
+class VPSO
 {
 public:
     std::function<double(Eigen::ArrayXd)> f;
     Eigen::ArrayXd *pos;
     Eigen::ArrayXd *pos_best;
     Eigen::ArrayXd *vel;
+    Eigen::ArrayXd record_pos;
+    double record_val;
     double *y;
     double *y_best;
     size_t particle_count;
@@ -19,9 +23,9 @@ public:
     double l_constraint = -1;
     double u_constraint = 1;
 
-    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_)
+    VPSO(std::function<double(Eigen::ArrayXd)> func, size_t n, size_t dims_)
     {
-        f = x_;
+        f = func;
         particle_count = n;
         dims = dims_;
 
@@ -34,9 +38,9 @@ public:
         y_best = (double *)malloc(particle_count * sizeof(double));
     }
 
-    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg)
+    VPSO(std::function<double(Eigen::ArrayXd)> func, size_t n, size_t dims_, double w, double pp, double pg)
     {
-        f = x_;
+        f = func;
         particle_count = n;
         dims = dims_;
 
@@ -53,9 +57,9 @@ public:
         phi_p = pp;
     }
 
-    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double lc, double uc)
+    VPSO(std::function<double(Eigen::ArrayXd)> func, size_t n, size_t dims_, double lc, double uc)
     {
-        f = x_;
+        f = func;
         particle_count = n;
         dims = dims_;
 
@@ -71,9 +75,9 @@ public:
         u_constraint = uc;
     }
 
-    PVSO(std::function<double(Eigen::ArrayXd)> x_, size_t n, size_t dims_, double w, double pp, double pg, double lc, double uc)
+    VPSO(std::function<double(Eigen::ArrayXd)> func, size_t n, size_t dims_, double w, double pp, double pg, double lc, double uc)
     {
-        f = x_;
+        f = func;
         particle_count = n;
         dims = dims_;
 
@@ -124,17 +128,15 @@ public:
         double best_val;
         int mindex;
 
-        score();
-
         mindex = std::min_element(y_best, y_best + particle_count) - y_best;
-        best_pos = pos_best[mindex];
-        best_val = y_best[mindex];
+        record_pos = pos_best[mindex];
+        record_val = y_best[mindex];
 
         for (size_t i = 0; i < particle_count; ++i)
         {
             vel[i] = omega * vel[i] +
                      phi_p * Eigen::ArrayXd::Random(dims).abs() * (pos_best[i] - pos[i]) +
-                     phi_g * Eigen::ArrayXd::Random(dims).abs() * (best_pos - pos[i]);
+                     phi_g * Eigen::ArrayXd::Random(dims).abs() * (record_pos - pos[i]);
 
             pos[i] = pos[i] + dt * vel[i];
 
