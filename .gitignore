@@ -1,4 +1,3 @@
 .vscode/*
-test
-testing.cpp
+tests/*
 Makefile
